@@ -1,0 +1,33 @@
+stages:
+  - lint
+  - test
+  - build
+  - deploy
+
+lint:
+  stage: lint
+  image: php:8.2-cli
+  script:
+    - php -l scraper.php
+
+test:
+  stage: test
+  image: php:8.2-cli
+  script:
+    - php scraper.php
+    - php tests/test_scraper.php
+
+build:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t trainee-crawler .
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Simulando deploy para AWS ECS..."
+  only:
+    - main
